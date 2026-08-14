@@ -1,0 +1,270 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Footer from "../components/Footer.astro";
+
+const experience = [
+  {
+    idx: "01",
+    role: "Founder, COO",
+    org: "Axiom Pathways, Inc",
+    dates: "April 2026 - Present",
+    bullets: [
+      "Founded and lead a 501(c)(3) nonprofit delivering workforce-readiness curriculum to low-income high school and college students worldwide, building a pipeline to remote internships with 10+ startup partners, including OpenTrade, Corgi, and TypeOS.",
+      "Drove 2,000+ website visits, 150,000+ Instagram views, and 700+ program applications YTD by managing the website backend, leading LinkedIn/Instagram marketing with Figma-designed graphics, securing a $10,000/month Google Ad Grant, running Google Ad campaigns, and liaising with Microsoft's proof-of-concept partnership team.",
+      "Authored and produced 30+ articles and videos on marketing and AI fluency, published on axiompathways.org.",
+      "Recruited 3 startup founders overseeing $10M+ in revenue into the internship pipeline",
+      "Directly placed 130+ paid interns, expanding opportunities for High school and College students",
+    ],
+  },
+  {
+    idx: "02",
+    role: "Go-to-market",
+    org: "OpenTrade (YC S26)",
+    dates: "August 2026 – Present",
+    bullets: [
+      "Worked directly with CMO to conduct market research in order to shape go-to-market strategy and product positioning.",
+      "Launched OpenTrade's first collegiate campus ambassador program",
+      "Recruited and onboarded 60+ college user-generated content (UGC) interns across universities (UC Berkeley, UNC Chapel Hill, etc)",
+      "Redesigned core game mechanics to convert top-of-funnel players into mid-funnel engaged users, executing the company's first funnel-optimization campaign.",
+      "Created viral LinkedIn posts with 100,000+ total members reached",
+    ],
+  },
+  {
+    idx: "03",
+    role: "Lead Tutor",
+    org: "Amviet Learning Center, LLC",
+    dates: "June 2026 - Present",
+    bullets: [
+      "Tutored 20 middle school students across four core subjects: math, science, English, and social studies, tailoring instruction to individual learning needs.",
+      "Delivered approximately 19 hours of instruction weekly on a consistent Monday–Friday schedule (2:45–6:30 PM).",
+      "Developed and adapted lesson plans across subject areas to reinforce classroom curriculum and support student comprehension.",
+    ],
+  },
+  {
+    idx: "04",
+    role: "Social Media Team Member",
+    org: "TRIIBE",
+    dates: "May 2026 - Present",
+    bullets: [
+      "Audited LinkedIn and Instagram content performance to identify strategies for increasing post engagement and virality.",
+      "Managed the official Instagram account, publishing and monitoring posts as the team's youngest contributor.",
+      "Edited and clipped event video footage for distribution across social media platforms.",
+      "Designed graphics in Figma to support social media campaigns and maintain visual brand consistency.",
+    ],
+  },
+  {
+    idx: "05",
+    role: "Founding Executive, Finance Director",
+    org: "Youth Civics Network",
+    dates: "February 2026 - Present",
+    bullets: [
+      "Led financial strategy for the organization, raising $7,500 through grant writing while overseeing budgeting, financial reporting, and long-term planning.",
+      "Partnered with the Operations Director on financial statement preparation and banking, supporting the organization's growth to 100 members and national nonprofit recognition.",
+      "Contributed to civics curriculum reading 600+ students across 10+ states",
+    ],
+  },
+  {
+    idx: "06",
+    role: "Research Associate",
+    org: "Jambeck Research Group (MacArthur Fellow-Led)",
+    dates: "January 2026 - May 2026",
+    bullets: [
+      "Conducted field research and collected environmental data in partnership with Alief ISD's sustainability initiatives.",
+      "Compiled literature reviews that contributed to an open data platform cited by published papers and organizations.",
+      "Engaged dozens of stakeholders, including community members and local business owners (restaurants, hotels), to gather input shaping waste management solutions.",
+    ],
+  },
+  {
+    idx: "07",
+    role: "Intern",
+    org: "Office of Business Opportunities, Houston, TX",
+    dates: "June 2025 - August 2025",
+    bullets: [
+      "Updated and refined business guides and marketing materials to support outreach efforts.",
+      "Represented OBO at career fairs, promoting services and strengthening local business engagement.",
+      "Modernized the certifications department's file storage and records system, ensuring accurate, up-to-date data for minority- and women-owned business certifications.",
+      "Redesigned the new employee onboarding process for the contract compliance department, streamlining workforce transitions.",
+    ],
+  },
+  {
+    idx: "08",
+    role: "Intern",
+    org: "GPI Investment, Houston, TX",
+    dates: "June 2024 - August 2024",
+    bullets: [
+      "Analyzed potential investment opportunities through spreadsheet modeling, market research, and report preparation.",
+      "Collaborated directly with the firm's president and analyst team on live deal evaluation.",
+    ],
+  },
+  {
+    idx: "09",
+    role: "Youth Ambassador - Researcher",
+    org: "City of Houston, Houston",
+    dates: "October 2023 – March 2024",
+    bullets: [
+      "Partnered with the Houston Mayor's Office of Education and fellow student representatives (ages 13-18) to address issues in mental health, equity, and education policy.",
+      "Designed and conducted surveys collecting feedback from Houston-area students to inform policy discussions, presenting findings to support community-focused initiatives.",
+    ],
+  },
+  {
+    idx: "10",
+    role: "Assistant Treasurer, Member",
+    org: "Speech and Debate",
+    dates: "September 2023 - April 2025",
+    bullets: [
+      "Debated against state and national-qualifying teams on complex issues such as fiscal redistribution and expansion of intellectual property rights.",
+      "Dedicated 1-2 hours per day to collaborative and independent research to stay informed for upcoming debates",
+      "Organized team events, fundraisers, and practice sessions that contributed to the team's growth and competitive success.",
+      "UIL CX District Champion, NCFL Nationals Qualifier, TFA States Qualifier",
+    ],
+  },
+  {
+    idx: "11",
+    role: "Member",
+    org: "Future Business Leaders of America",
+    dates: "September 2023 - Present",
+    bullets: [
+      "Competed in FBLA events by grade level: Business Concepts, Personal Finance, and Securities & Investments",
+      "Placed 8th nationally in Business Concepts, demonstrating mastery of consumerism, economic systems, business ethics, insurance, and money management.",
+      "Qualified for nationals 3x and won the Texas state competition.",
+    ],
+  },
+];
+---
+
+<Layout
+  title="Resume — Frank Niu"
+  description="Frank Niu's résumé — roles, organizations, and results."
+>
+  <section class="rp" id="resume" aria-labelledby="rp-heading">
+    <div class="container">
+      <header class="rp__head" data-reveal>
+        <p class="label">§ Resume — roles &amp; results</p>
+        <h1 class="display rp__title" id="rp-heading">Frank Niu</h1>
+        <p class="rp__contact mono">267-428-9462| Frank.z.niu@gmail.com| Houston, Texas (77082)</p>
+      </header>
+
+      <p class="label rp__section" data-reveal>Experience</p>
+
+      <ol class="rp__list">
+        {
+          experience.map((r) => (
+            <li class="rp__row" data-reveal>
+              <span class="mono rp__idx">[{r.idx}]</span>
+              <div class="rp__role">
+                <div class="rp__role-head">
+                  <h2 class="rp__role-name">{r.role}</h2>
+                  <span class="rp__dates mono">{r.dates}</span>
+                </div>
+                <p class="rp__org">{r.org}</p>
+                <ul class="rp__bullets">
+                  {r.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+  <Footer />
+</Layout>
+
+<style>
+  .rp {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  .rp__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-bottom: clamp(2rem, 1rem + 3vw, 3.5rem);
+  }
+  .rp__title {
+    font-size: var(--fs-display);
+    font-weight: 750;
+    letter-spacing: -0.03em;
+  }
+  .rp__contact {
+    color: var(--ink-dim);
+    font-size: var(--fs-small);
+  }
+  .rp__section {
+    margin-bottom: var(--sp-2);
+  }
+
+  .rp__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .rp__row {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+    padding: clamp(1.25rem, 0.9rem + 1vw, 1.75rem) 0.5rem;
+    border-bottom: 1px solid var(--line);
+    transition: padding-left var(--dur) var(--ease-out);
+  }
+  .rp__row:hover {
+    padding-left: 1.25rem;
+  }
+  .rp__idx {
+    color: var(--ink-faint);
+    font-size: var(--fs-small);
+    transition: color var(--dur) var(--ease-out);
+  }
+  .rp__row:hover .rp__idx {
+    color: var(--accent);
+  }
+  .rp__role-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+  }
+  .rp__role-name {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .rp__dates {
+    font-size: var(--fs-micro);
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+  .rp__org {
+    color: var(--accent);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    margin-top: 0.2rem;
+  }
+  .rp__bullets {
+    margin: 0.6rem 0 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .rp__bullets li {
+    color: var(--ink-dim);
+    font-size: var(--fs-small);
+    max-width: 62ch;
+  }
+
+  @media (max-width: 560px) {
+    .rp__row {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: 1rem;
+    }
+    .rp__row:hover {
+      padding-left: 0.5rem;
+    }
+  }
+</style>

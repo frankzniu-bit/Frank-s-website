@@ -8,6 +8,7 @@ const pages = [
   { title: "Writing", href: "/writing", caption: "Essays & papers", idx: "03" },
   { title: "Values", href: "/values", caption: "What I optimize for", idx: "04" },
   { title: "Hobbies", href: "/hobbies", caption: "Outside the work", idx: "05" },
+  { title: "Resume", href: "/resume", caption: "Roles, dates, results", idx: "06" },
 ];
 
 // keep in sync with TINTS in the client script below
@@ -17,6 +18,7 @@ const TINTS: Record<string, string> = {
   "03": "rgb(42,38,32)",
   "04": "rgb(61,58,36)",
   "05": "rgb(59,86,128)",
+  "06": "rgb(77,60,31)",
 };
 const cardTint = (idx: string) => TINTS[idx] ?? "rgb(40,40,40)";
 ---
@@ -351,6 +353,7 @@ const cardTint = (idx: string) => TINTS[idx] ?? "rgb(40,40,40)";
       "03": { variant: 2, a: 0x1a160f, b: 0x3a3020, c: 0x8a7048 }, // Writing — waves, warm
       "04": { variant: 3, a: 0x23210f, b: 0x46431f, c: 0x9a9648 }, // Values — noise, olive
       "05": { variant: 4, a: 0x1c2c44, b: 0x3b5680, c: 0x86a6d6 }, // Hobbies — particles, blue
+      "06": { variant: 0, a: 0x23190f, b: 0x4d3c1f, c: 0xd6b062 }, // Resume — mesh, gold
     };
 
     // ---------- panel textures ----------
