@@ -66,6 +66,33 @@ const {
       };
 
       let revealObserver: IntersectionObserver | undefined;
+      let revealPending: HTMLElement[] = [];
+
+      // Fallback for fast scrolls (large wheel ticks, spacebar/PageDown,
+      // trackpad flicks, programmatic scrollTo): IntersectionObserver only
+      // catches elements that actually intersect the viewport at a rendered
+      // frame, so an element can jump from below to above the fold between
+      // two frames and never be reported. Anything already at or past the
+      // fold counts as "should be visible" even if the observer missed it.
+      // Runs directly off scroll/resize (not requestAnimationFrame) since
+      // rAF is suspended in backgrounded/inactive tabs/windows and would
+      // silently stop catching missed reveals — this check is cheap enough
+      // (a handful of getBoundingClientRect reads that shrink over time) to
+      // not need rAF batching.
+      const revealFallbackCheck = () => {
+        if (!revealPending.length) return;
+        const vh = window.innerHeight;
+        revealPending = revealPending.filter((el) => {
+          if (el.classList.contains("is-visible")) return false;
+          if (el.getBoundingClientRect().top < vh) {
+            el.classList.add("is-visible");
+            revealObserver?.unobserve(el);
+            return false;
+          }
+          return true;
+        });
+      };
+
       const setupReveals = () => {
         const items = document.querySelectorAll<HTMLElement>("[data-reveal]");
         if (!items.length) return;
@@ -87,6 +114,8 @@ const {
           { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
         );
         items.forEach((el) => revealObserver!.observe(el));
+        revealPending = Array.from(items);
+        revealFallbackCheck();
       };
 
       const onPageLoad = () => {
@@ -95,6 +124,8 @@ const {
       };
 
       document.addEventListener("astro:page-load", onPageLoad);
+      window.addEventListener("scroll", revealFallbackCheck, { passive: true });
+      window.addEventListener("resize", revealFallbackCheck);
     </script>
 
     <style>
