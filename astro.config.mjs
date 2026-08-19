@@ -8,7 +8,7 @@ import { defineConfig } from "astro/config";
 const ghPages = process.env.GH_PAGES === "true";
 
 export default defineConfig({
-  site: ghPages ? "https://mattypark.github.io" : "https://frank-s-website-psi.vercel.app",
+  site: ghPages ? "https://frankzniu-bit.github.io" : "https://frank-s-website-nine.vercel.app",
   base: ghPages ? "/Frank-s-website/" : "/",
   prefetch: true,
 });
