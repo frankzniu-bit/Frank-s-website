@@ -61,7 +61,7 @@ const fmt = (d: Date) =>
         {
           essays.map((e, i) => (
             <li class="wr__item" data-category={e.data.category} data-reveal style={`--reveal-delay: ${Math.min(i * 50, 300)}ms`}>
-              <a href={`/writing/${e.id}`} class="wr__link">
+              <a href={`${import.meta.env.BASE_URL}writing/${e.id}`} class="wr__link">
                 <span class="mono wr__date">{fmt(e.data.date)}</span>
                 <span class="wr__body">
                   <span class="wr__name">{e.data.title}</span>

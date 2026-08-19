@@ -21,7 +21,7 @@ const fmt = (d: Date) =>
 <Layout title={`${entry.data.title} — Frank Niu`} description={entry.data.summary}>
   <article class="essay">
     <div class="container essay__inner">
-      <a href="/writing" class="essay__back mono" data-reveal>← Writing</a>
+      <a href={`${import.meta.env.BASE_URL}writing`} class="essay__back mono" data-reveal>← Writing</a>
 
       <header class="essay__head" data-reveal>
         <p class="label essay__meta">
@@ -39,7 +39,7 @@ const fmt = (d: Date) =>
         <Content />
       </div>
 
-      <a href="/writing" class="essay__back essay__back--bottom mono">← Back to writing</a>
+      <a href={`${import.meta.env.BASE_URL}writing`} class="essay__back essay__back--bottom mono">← Back to writing</a>
     </div>
   </article>
   <Footer />

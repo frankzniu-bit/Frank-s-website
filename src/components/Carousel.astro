@@ -2,13 +2,14 @@
 // Cylindrical page-carousel (Three.js). Each curved panel is a page; drag to
 // rotate, click to enter. Ambient 3D glass shards drift behind it. Falls back
 // to an accessible card grid when WebGL is unavailable or motion is reduced.
+const base = import.meta.env.BASE_URL;
 const pages = [
-  { title: "Story", href: "/story", caption: "The timeline, birth to now", idx: "01" },
-  { title: "Work", href: "/work", caption: "What I'm building", idx: "02" },
-  { title: "Writing", href: "/writing", caption: "Essays & papers", idx: "03" },
-  { title: "Values", href: "/values", caption: "What I optimize for", idx: "04" },
-  { title: "Hobbies", href: "/hobbies", caption: "Outside the work", idx: "05" },
-  { title: "Resume", href: "/resume", caption: "Roles, dates, results", idx: "06" },
+  { title: "Story", href: `${base}story`, caption: "The timeline, birth to now", idx: "01" },
+  { title: "Work", href: `${base}work`, caption: "What I'm building", idx: "02" },
+  { title: "Writing", href: `${base}writing`, caption: "Essays & papers", idx: "03" },
+  { title: "Values", href: `${base}values`, caption: "What I optimize for", idx: "04" },
+  { title: "Hobbies", href: `${base}hobbies`, caption: "Outside the work", idx: "05" },
+  { title: "Resume", href: `${base}resume`, caption: "Roles, dates, results", idx: "06" },
 ];
 
 // keep in sync with TINTS in the client script below
@@ -37,7 +38,7 @@ const cardTint = (idx: string) => TINTS[idx] ?? "rgb(40,40,40)";
 
     <div class="cv__hud" aria-hidden="true">
       <button class="cv__arrow" data-cv-prev aria-label="Previous">←</button>
-      <a class="cv__enter mono" data-cv-enter href="/story">
+      <a class="cv__enter mono" data-cv-enter href={`${base}story`}>
         <span data-cv-enter-label>Story</span>
         <span class="cv__enter-go">enter ↗</span>
       </a>
