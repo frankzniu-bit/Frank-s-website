@@ -217,6 +217,63 @@ const cardTint = (idx: string) => TINTS[idx] ?? "rgb(40,40,40)";
     transform: translate(3px, -3px);
   }
 
+  /* WebGL unavailable: same wheel, built from CSS 3D transforms */
+  .cv__stage[data-cv-css] {
+    perspective: 1600px;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .cv__stage[data-cv-css] .cv__hud {
+    display: flex;
+  }
+  .cv__stage[data-cv-css] .cv__cards {
+    position: absolute;
+    left: 50%;
+    top: calc(50% - 1.5rem);
+    display: block;
+    width: 0;
+    height: 0;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .cv__stage[data-cv-css] .cv__card {
+    position: absolute;
+    left: calc(var(--cv-w) / -2);
+    top: calc(var(--cv-h) / -2);
+    width: var(--cv-w);
+    height: var(--cv-h);
+    transform: rotateY(var(--cv-a)) translateZ(var(--cv-r));
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  .cv__stage[data-cv-css] .cv__card-link {
+    min-height: 0;
+    padding: 1rem;
+    -webkit-user-drag: none;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--tint) 55%, #15120d),
+      var(--tint),
+      color-mix(in srgb, var(--tint) 75%, #8a8478),
+      var(--tint)
+    );
+    background-size: 300% 300%;
+    animation: cv-drift 14s ease-in-out infinite alternate;
+  }
+  .cv__stage[data-cv-css] .cv__card-link:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  @keyframes cv-drift {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 100% 50%;
+    }
+  }
+
   /* when 3D is live: hide the cards visually but keep them for screen readers */
   .cv__stage[data-cv-ready] .cv__canvas {
     display: block;
@@ -239,12 +296,148 @@ const cardTint = (idx: string) => TINTS[idx] ?? "rgb(40,40,40)";
 
   type Page = { title: string; href: string; caption: string; idx: string };
 
+  // Same wheel without WebGL: the existing card links placed on a ring with
+  // CSS 3D transforms, rotated by drag / arrows / keys.
+  function initCssCarousel(stage: HTMLElement, pages: Page[]) {
+    const ring = stage.querySelector<HTMLElement>("[data-cv-cards]");
+    const cards = ring ? (Array.from(ring.children) as HTMLElement[]) : [];
+    if (!ring || cards.length !== pages.length) return;
+
+    const n = pages.length;
+    const deg = 360 / n;
+    stage.dataset.cvCss = "";
+    ring.querySelectorAll("a").forEach((a) => (a.draggable = false));
+    cards.forEach((c, i) => c.style.setProperty("--cv-a", `${i * deg}deg`));
+
+    const layout = () => {
+      const cw = Math.min(380, Math.max(230, stage.clientWidth * 0.7));
+      stage.style.setProperty("--cv-w", `${cw}px`);
+      stage.style.setProperty("--cv-h", `${cw * 0.7}px`);
+      stage.style.setProperty("--cv-r", `${(cw / 2 / Math.tan(Math.PI / n)) * 1.14}px`);
+    };
+    layout();
+    window.addEventListener("resize", layout);
+
+    const enterLink = stage.querySelector<HTMLAnchorElement>("[data-cv-enter]")!;
+    const enterLabel = stage.querySelector<HTMLElement>("[data-cv-enter-label]")!;
+
+    let index = 0;
+    let target = 0;
+    let rot = 0;
+    let raf = 0;
+    const active = () => ((index % n) + n) % n;
+    const syncEnter = () => {
+      const p = pages[active()];
+      enterLabel.textContent = p.title;
+      enterLink.href = p.href;
+    };
+    const paint = () => {
+      raf = 0;
+      rot += (target - rot) * 0.12;
+      if (Math.abs(target - rot) < 0.02) rot = target;
+      ring.style.transform = `translateZ(calc(var(--cv-r) * -1)) rotateY(${rot}deg)`;
+      if (rot !== target) raf = requestAnimationFrame(paint);
+    };
+    const kick = () => {
+      if (!raf) raf = requestAnimationFrame(paint);
+    };
+    const go = (i: number) => {
+      index = i;
+      target = -index * deg;
+      syncEnter();
+      kick();
+    };
+    const goTo = (i: number) => {
+      let d = (((i - active()) % n) + n) % n;
+      if (d > n / 2) d -= n;
+      go(index + d);
+    };
+
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startTarget = 0;
+    const onMove = (e: PointerEvent) => {
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) moved = true;
+      if (moved) {
+        target = startTarget + dx * 0.3;
+        kick();
+      }
+    };
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      if (!dragging) return;
+      dragging = false;
+      go(Math.round(-target / deg));
+    };
+    stage.addEventListener("pointerdown", (e) => {
+      if ((e.target as HTMLElement).closest(".cv__hud")) return;
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      startTarget = target;
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+    });
+    // a drag shouldn't open a page; a click on a side card brings it to the front
+    ring.addEventListener(
+      "click",
+      (e) => {
+        const li = (e.target as HTMLElement).closest("li");
+        if (!li) return;
+        if (moved) {
+          e.preventDefault();
+          e.stopPropagation();
+          moved = false;
+        } else if (cards.indexOf(li) !== active()) {
+          e.preventDefault();
+          goTo(cards.indexOf(li));
+        }
+      },
+      true
+    );
+
+    stage.querySelector("[data-cv-prev]")?.addEventListener("click", () => go(index - 1));
+    stage.querySelector("[data-cv-next]")?.addEventListener("click", () => go(index + 1));
+    stage.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") go(index - 1);
+      else if (e.key === "ArrowRight") go(index + 1);
+    });
+
+    syncEnter();
+    paint();
+
+    const dispose = () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", layout);
+      document.removeEventListener("astro:before-swap", dispose);
+    };
+    document.addEventListener("astro:before-swap", dispose);
+  }
+
   async function initCarousel() {
     const stage = document.querySelector<HTMLElement>("[data-cv-stage]");
     const canvas = document.querySelector<HTMLCanvasElement>("[data-cv-canvas]");
-    if (!stage || !canvas || stage.dataset.cvReady !== undefined) return;
+    if (
+      !stage ||
+      !canvas ||
+      stage.dataset.cvReady !== undefined ||
+      stage.dataset.cvCss !== undefined
+    )
+      return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return; // keep accessible card grid
+
+    const pages: Page[] = JSON.parse(
+      document.getElementById("cv-pages-data")?.textContent || "[]"
+    );
+    if (!pages.length) return;
+
     const hasWebGL = (() => {
       try {
         const c = document.createElement("canvas");
@@ -256,14 +449,14 @@ const cardTint = (idx: string) => TINTS[idx] ?? "rgb(40,40,40)";
         return false;
       }
     })();
-    if (reduce || !hasWebGL) return; // keep accessible card grid
+    if (!hasWebGL) return initCssCarousel(stage, pages);
 
-    const pages: Page[] = JSON.parse(
-      document.getElementById("cv-pages-data")?.textContent || "[]"
-    );
-    if (!pages.length) return;
-
-    const THREE = await import("three");
+    let THREE: typeof import("three");
+    try {
+      THREE = await import("three");
+    } catch {
+      return initCssCarousel(stage, pages);
+    }
     THREE.ColorManagement.enabled = false; // author colors pass through as-is
     await (document as any).fonts?.ready;
 
@@ -400,7 +593,12 @@ const cardTint = (idx: string) => TINTS[idx] ?? "rgb(40,40,40)";
     };
 
     // ---------- scene ----------
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    let renderer: InstanceType<typeof THREE.WebGLRenderer>;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch {
+      return initCssCarousel(stage, pages);
+    }
     renderer.setClearColor(0x000000, 0);
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
